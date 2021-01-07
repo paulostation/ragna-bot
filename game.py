@@ -11,37 +11,8 @@ class Game:
     def run(self):
         while True:
             self.vision.refresh_frame()
-            if self.state == 'not started' and self.round_starting('bison'):
-                self.log('Round needs to be started, launching bison')
-                self.launch_player()
-                self.state = 'started'
-            if self.state == 'not started' and self.round_starting('pineapple'):
-                self.log('Round needs to be started, launching pineapple')
-                try:
-                    self.launch_player()
-                    self.state = 'started'
-                except Exception as ex:
-                    self.log('Failed to find pineapple character')
-            elif self.state == 'started' and self.found_pinata():
-                self.log('Found a pinata, attempting to skip')
-                self.click_cancel()
-            elif self.state == 'started' and self.round_finished():
-                self.log('Round finished, clicking to continue')
-                self.click_to_continue()
-                self.state = 'mission_finished'
-            elif self.state == 'started' and self.has_full_rocket():
-                self.log('Round in progress, has full rocket, attempting to use it')
-                self.use_full_rocket()
-            elif self.state == 'mission_finished' and self.can_start_round():
-                self.log('Mission finished, trying to restart round')
-                self.start_round()
-                self.state = 'not started'            
-            elif self.portal_left():
-                self.log('Portal to the left, walking...')
-                self.controller.walk_left(3)
-            elif self.portal_right():
-                self.log('Portal to the right, walking...')
-                self.controller.walk_right(3)
+            if self.procurar_planta():
+                print("achei_a_planta")
             else:
                 self.log('Not doing anything')
                 self.controller.adaga()
@@ -52,8 +23,16 @@ class Game:
         matches = self.vision.find_template('%s-health-bar' % player)
         return np.shape(matches)[1] >= 1
 
-    def portal_left(self):
-        matches = self.vision.find_template('portal_left')
+    def procurar_planta(self):
+        matches = self.vision.find_template('planta_carnivora')
+        if np.shape(matches)[1] >= 1:
+            x = matches[1][0]
+            y = matches[0][0]
+
+            self.controller.left_mouse_drag(
+                (x, y),
+                (x-200, y+10)
+            )    
         return np.shape(matches)[1] >= 1
 
     def portal_right(self):

@@ -1,4 +1,6 @@
+import pyautogui as pag
 import time
+
 
 import pydirectinput
 
@@ -84,20 +86,9 @@ class Controller:
         self.press_and_hold(direction, duration)
 
     def adaga(self):
-
-        self.keypresses(
-            ['up', 'up'],
-            [0.5, 0.5]
-        )
-
-        pydirectinput.keyDown('down')
-        time.sleep(0.01)
-        pydirectinput.keyDown('z')
-        time.sleep(0.01)
-        pydirectinput.keyUp('z')
-        time.sleep(0.01)
-        pydirectinput.keyUp('down')
-
+        pydirectinput.keyDown(88)
+        time.sleep(0.15)
+        pydirectinput.keyUp(88)
 
     def run(self, direction, duration):
 

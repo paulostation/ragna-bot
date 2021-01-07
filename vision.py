@@ -10,19 +10,8 @@ GAME_RES = (800, 600)
 class Vision:
     def __init__(self):
         self.static_templates = {
-            'left-goalpost': 'assets/left-goalpost.png',
-            'bison-head': 'assets/bison-head.png',
-            'pineapple-head': 'assets/pineapple-head.png',
-            'bison-health-bar': 'assets/bison-health-bar.png',
-            'pineapple-health-bar': 'assets/pineapple-health-bar.png',
-            'cancel-button': 'assets/cancel-button.png',
-            'filled-with-goodies': 'assets/filled-with-goodies.png',
-            'next-button': 'assets/next-button.png',
-            'tap-to-continue': 'assets/tap-to-continue.png',
-            'unlocked': 'assets/unlocked.png',
-            'full-rocket': 'assets/full-rocket.png',
-            'portal_left': 'assets/portal_left.jpg',
-            'portal_right': 'assets/portal_right.jpg'
+            
+            'planta_carnivora': 'assets/1368.png',
         }
 
         self.templates = { k: cv2.imread(v, 0) for (k, v) in self.static_templates.items() }
@@ -71,7 +60,7 @@ class Vision:
         # Game handle
         game_hwnd = 0
         for (hwnd, win_text) in windows_list:
-            if "Grand Chase" in win_text:
+            if "Ragnarok" in win_text:
                 game_hwnd = hwnd
         rect = win32gui.GetWindowRect(game_hwnd)
         return rect
