@@ -6,8 +6,8 @@ import pydirectinput
 
 class Controller:
     def __init__(self):
-        self.mouse = MouseController()
-        self.keyboard = KeyboardController()
+        self.mouse = None#MouseController()
+        self.keyboard = None#KeyboardController()
 
     def adagas_ninja(self):
 

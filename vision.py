@@ -2,7 +2,10 @@ import cv2
 from mss import mss
 from PIL import Image
 import numpy as np
-import time
+from time import sleep
+import win32gui
+
+GAME_RES = (800, 600)
 
 class Vision:
     def __init__(self):
@@ -24,7 +27,11 @@ class Vision:
 
         self.templates = { k: cv2.imread(v, 0) for (k, v) in self.static_templates.items() }
 
-        self.monitor = {'top': 0, 'left': 0, 'width': 1920, 'height': 1080}
+        rect = self.find_game_window()
+
+        self.monitor = {
+            'top': int((1080 / 2) - (GAME_RES[1] / 2)), 'left': int((1920 / 2) - (GAME_RES[0] / 2)), 'width': GAME_RES[0] + 20, 'height': GAME_RES[1] + 20
+        }
         self.screen = mss()
 
         self.frame = None
@@ -35,8 +42,39 @@ class Vision:
         img = np.array(img)
         img = self.convert_rgb_to_bgr(img)
         img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        laplacian = cv2.Laplacian(img_gray,cv2.CV_64F)
+        cv2.imwrite("ss.png", laplacian)
 
         return img_gray
+
+    def find_game_window(self):
+        print("About to grab game coordinates, please open the game.")
+
+        answer = input("Is the game open?")
+        proceed = answer.lower() == 'y'
+        while not proceed:
+            answer = input("Is the game open?")
+            proceed = answer.lower() == 'y'
+        
+        print("Waiting 3 seconds to open game window...")
+        sleep(3)
+        # Detect the window 
+        windows_list = []
+        toplist = []
+        def enum_win(hwnd, result):
+            win_text = win32gui.GetWindowText(hwnd)
+            windows_list.append((hwnd, win_text))
+
+        win32gui.EnumWindows(enum_win, toplist)
+
+        # Game handle
+        game_hwnd = 0
+        for (hwnd, win_text) in windows_list:
+            if "Grand Chase" in win_text:
+                game_hwnd = hwnd
+        rect = win32gui.GetWindowRect(game_hwnd)
+        return rect
+            
 
     def get_image(self, path):
         return cv2.imread(path, 0)
