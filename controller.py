@@ -1,148 +1,35 @@
-import pyautogui as pag
+
 import time
-
-
-import pydirectinput
-
-
+from ahk import AHK
+from random import randint
 
 class Controller:
     def __init__(self):
-        self.mouse = None#MouseController()
+        self.mouse = AHK()
         self.keyboard = None#KeyboardController()
 
-    def adagas_ninja(self):
+    def random_walk(self):
+        offset_x = 3
+        offset_y = 22
 
-        self.keyboard.press('5')
-        time.sleep(0.15)
-        self.keyboard.release('5')
+        center_x = (1024 + offset_x) / 2
+        center_y = (768 + offset_y) / 2
+
+        range = 150
+        x = center_x + randint(-range, range)
+        y = center_y + randint(-range, range)
+        self.mouse.mouse_move(x=x, y=y, speed=3, blocking=True)
         time.sleep(0.5)
-        self.keyboard.press('8')
-        time.sleep(0.15)
-        self.keyboard.release('8')
+        self.mouse.click(x, y)
         time.sleep(0.5)
-        self.keyboard.press('5')
-        time.sleep(0.15)
-        self.keyboard.release('5')
-        time.sleep(0.5)
-        self.keyboard.press('Z')
-        time.sleep(0.15)
-        self.keyboard.release('Z')
 
-    def keypresses(self, keys, delays=None):
-
-        if not delays:
-            delays = [0.5 for n in keys]
-
-        for i, key in enumerate(keys):
-            pydirectinput.keyDown(key)
-            time.sleep(0.01)
-            pydirectinput.keyUp(key)
-            time.sleep(delays[i])
-
-    def press_and_hold(self, key, duration=1):
-
-        pydirectinput.keyDown(key)
-        time.sleep(duration)
-        pydirectinput.keyUp(key)
-
-    def atacar(self):
-        pydirectinput.keyDown('z')
-        time.sleep(0.01)
-        pydirectinput.keyUp('z')
-        time.sleep(1)
-
-    def combo(self):
-
-        self.keypresses(
-            ['z', 'z', 'z'],
-            delays=[0.05, 0.05, 0.05]
-        )
-
-    def run_left(self, duration=3):
-
-        self.run('left', duration)
-
-    def run_right(self, duration=3):
-
-        self.run('right', duration)
-
-    def jump(self, duration=3):
-
-        self.keypresses(
-            'up'
-        )
-
-    def walk_right(self, duration=3):
-
-        self.walk('right', duration)
-
-    def walk_left(self, duration=3):
-
-        self.walk('left', duration)
-
-    def walk(self, direction, duration):
-
-        self.press_and_hold(direction, duration)
-
-    def adaga(self):
-        pydirectinput.keyDown(88)
-        time.sleep(0.15)
-        pydirectinput.keyUp(88)
-
-    def run(self, direction, duration):
-
-        self.keypresses(
-            [direction],
-            delays=[0.001]
-        )
-
-        self.press_and_hold(direction, duration)
-
-    def fatiar(self):
-
-        self.keypresses(
-            ['z'],
-            delays=[0.0002]
-        )
-
-    def special_1(self):
-
-        self.press_and_hold('z')
-
-    def special_2(self):
-
-        self.press_and_hold('z', duration=2)
-
-    def move_mouse(self, x, y):
-        def set_mouse_position(x, y):
-            self.mouse.position = (int(x), int(y))
-        def smooth_move_mouse(from_x, from_y, to_x, to_y, speed=0.2):
-            steps = 40
-            sleep_per_step = speed // steps
-            x_delta = (to_x - from_x) / steps
-            y_delta = (to_y - from_y) / steps
-            for step in range(steps):
-                new_x = x_delta * (step + 1) + from_x
-                new_y = y_delta * (step + 1) + from_y
-                set_mouse_position(new_x, new_y)
-                time.sleep(sleep_per_step)
-        return smooth_move_mouse(
-            self.mouse.position[0],
-            self.mouse.position[1],
-            x,
-            y
-        )
-
-    def left_mouse_click(self):
-        self.mouse.click(Button.left)
-
-    def left_mouse_drag(self, start, end):
-        self.move_mouse(*start)
+    def atacar(self, x, y):
+        x += 25
+        y += 25
+        
+        print("About to  attack")
+        
+        self.mouse.mouse_position = (x, y)
         time.sleep(0.2)
-        self.mouse.press(Button.left)
-        time.sleep(0.2)
-        self.move_mouse(*end)
-        time.sleep(0.2)
-        self.mouse.release(Button.left)
-        time.sleep(0.2)
+        self.mouse.click()
+        time.sleep(5)

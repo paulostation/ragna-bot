@@ -11,108 +11,25 @@ class Game:
     def run(self):
         while True:
             self.vision.refresh_frame()
-            if self.procurar_planta():
-                print("achei_a_planta")
+            if self.procurar_poring():
+                pass
             else:
                 self.log('Not doing anything')
-                self.controller.adaga()
+                self.controller.random_walk()
 
-            time.sleep(1)
-
-    def round_starting(self, player):
-        matches = self.vision.find_template('%s-health-bar' % player)
-        return np.shape(matches)[1] >= 1
-
-    def procurar_planta(self):
-        matches = self.vision.find_template('planta_carnivora')
+    def procurar_poring(self):
+        scales = [1.2, 1.1, 1.02, 1.01, 1.0, 0.99, 0.95]
+        matches = self.vision.scaled_find_template('poring', threshold=0.75, scales=scales)
         if np.shape(matches)[1] >= 1:
             x = matches[1][0]
             y = matches[0][0]
-
-            self.controller.left_mouse_drag(
-                (x, y),
-                (x-200, y+10)
-            )    
+            self.log("Achou o poring")
+            self.controller.atacar(x, y)
+            # self.controller.left_mouse_drag(
+            #     (x, y),
+            #     (x-200, y+10)
+            # )    
         return np.shape(matches)[1] >= 1
-
-    def portal_right(self):
-        matches = self.vision.find_template('portal_right')
-        return np.shape(matches)[1] >= 1
-
-    def launch_player(self):
-        # Try multiple sizes of goalpost due to perspective changes for
-        # different opponents
-        scales = [1.2, 1.1, 1.05, 1.04, 1.03, 1.02, 1.01, 1.0, 0.99, 0.98, 0.97, 0.96, 0.95]
-        matches = self.vision.scaled_find_template('left-goalpost', threshold=0.75, scales=scales)
-        x = matches[1][0]
-        y = matches[0][0]
-
-        self.controller.left_mouse_drag(
-            (x, y),
-            (x-200, y+10)
-        )
-
-        time.sleep(0.5)
-
-    def round_finished(self):
-        matches = self.vision.find_template('tap-to-continue')
-        return np.shape(matches)[1] >= 1
-
-    def click_to_continue(self):
-        matches = self.vision.find_template('tap-to-continue')
-
-        x = matches[1][0]
-        y = matches[0][0]
-
-        self.controller.move_mouse(x+50, y+30)
-        self.controller.left_mouse_click()
-
-        time.sleep(0.5)
-
-    def can_start_round(self):
-        matches = self.vision.find_template('next-button')
-        return np.shape(matches)[1] >= 1
-
-    def start_round(self):
-        matches = self.vision.find_template('next-button')
-
-        x = matches[1][0]
-        y = matches[0][0]
-
-        self.controller.move_mouse(x+100, y+30)
-        self.controller.left_mouse_click()
-
-        time.sleep(0.5)
-
-    def has_full_rocket(self):
-        matches = self.vision.find_template('full-rocket', threshold=0.9)
-        return np.shape(matches)[1] >= 1
-
-    def use_full_rocket(self):
-        matches = self.vision.find_template('full-rocket')
-
-        x = matches[1][0]
-        y = matches[0][0]
-
-        self.controller.move_mouse(x, y)
-        self.controller.left_mouse_click()
-
-        time.sleep(0.5)
-
-    def found_pinata(self):
-        matches = self.vision.find_template('filled-with-goodies', threshold=0.9)
-        return np.shape(matches)[1] >= 1
-
-    def click_cancel(self):
-        matches = self.vision.find_template('cancel-button')
-
-        x = matches[1][0]
-        y = matches[0][0]
-
-        self.controller.move_mouse(x, y)
-        self.controller.left_mouse_click()
-
-        time.sleep(0.5)
 
     def log(self, text):
         print('[%s] %s' % (time.strftime('%H:%M:%S'), text))

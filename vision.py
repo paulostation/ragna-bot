@@ -12,6 +12,7 @@ class Vision:
         self.static_templates = {
             
             'planta_carnivora': 'assets/1368.png',
+            'poring': 'assets/poring.jpg'
         }
 
         self.templates = { k: cv2.imread(v, 0) for (k, v) in self.static_templates.items() }
@@ -19,7 +20,6 @@ class Vision:
         rect = self.find_game_window()
 
         self.monitor = {
-            # 'top': int((1080 / 2) - (GAME_RES[1] / 2)), 'left': int((1920 / 2) - (GAME_RES[0] / 2)), 'width': GAME_RES[0] + 20, 'height': GAME_RES[1] + 20
             'top': 0, 'left': 0, 'width': 1920, 'height': 1080
         }
         self.screen = mss()
@@ -40,13 +40,13 @@ class Vision:
     def find_game_window(self):
         print("About to grab game coordinates, please open the game.")
 
-        answer = input("Is the game open?")
-        proceed = answer.lower() == 'y'
-        while not proceed:
-            answer = input("Is the game open?")
-            proceed = answer.lower() == 'y'
+        # answer = input("Is the game open?")
+        # proceed = answer.lower() == 'y'
+        # while not proceed:
+        #     answer = input("Is the game open?")
+        #     proceed = answer.lower() == 'y'
         
-        print("Waiting 3 seconds to open game window...")
+        # print("Waiting 3 seconds to open game window...")
         sleep(3)
         # Detect the window 
         windows_list = []
@@ -91,7 +91,7 @@ class Vision:
                 self.refresh_frame()
 
             image = self.frame
-
+        
         return self.match_template(
             image,
             self.templates[name],

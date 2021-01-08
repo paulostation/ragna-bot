@@ -5,6 +5,8 @@ from vision import Vision
 from controller import Controller
 from game import Game
 
+from settings import *
+
 vision = Vision()
 controller = Controller()
 game = Game(vision, controller)
