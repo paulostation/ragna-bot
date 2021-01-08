@@ -3,9 +3,14 @@ import time
 from ahk import AHK
 from random import randint
 
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
+
 class Controller:
     def __init__(self):
         self.mouse = AHK()
+        
         self.keyboard = None#KeyboardController()
 
     def random_walk(self):
@@ -33,3 +38,12 @@ class Controller:
         time.sleep(0.2)
         self.mouse.click()
         time.sleep(5)
+
+    def skill_F1(self):
+        
+        self.mouse.mouse_position = (235, 41)
+        time.sleep(0.2)
+        self.mouse.click()
+        time.sleep(0.2)
+        self.mouse.click()
+        

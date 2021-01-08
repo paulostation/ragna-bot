@@ -25,10 +25,7 @@ class Game:
             y = matches[0][0]
             self.log("Achou o poring")
             self.controller.atacar(x, y)
-            # self.controller.left_mouse_drag(
-            #     (x, y),
-            #     (x-200, y+10)
-            # )    
+            
         return np.shape(matches)[1] >= 1
 
     def log(self, text):
